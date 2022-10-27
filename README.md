@@ -15,7 +15,7 @@ It will be run on Qemu at IETF115, but will be run on a real device "Armadillo" 
 
 ![Screen Shot](docs/screenshot.jpg "Screen Shot")
 
-## Software Stack (As os October 27)
+## Software Stack (As of October 27)
 
 ![Software Stack](docs/softwarestack.png "Software Stack")
 
