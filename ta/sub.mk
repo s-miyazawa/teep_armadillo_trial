@@ -1,3 +1,8 @@
+#
+# Copyright (c) 2022 SECOM CO., LTD. All Rights reserved.
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
 global-incdirs-y += include
 srcs-y += teep_armadillo_trial_ta.c
 

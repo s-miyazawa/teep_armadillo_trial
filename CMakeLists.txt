@@ -1,3 +1,8 @@
+#
+# Copyright (c) 2022 SECOM CO., LTD. All Rights reserved.
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
 cmake_minimum_required(VERSION 3.22)
 
 project(teep_armadillo_trial C)

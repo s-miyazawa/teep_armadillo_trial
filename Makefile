@@ -1,3 +1,8 @@
+#
+# Copyright (c) 2022 SECOM CO., LTD. All Rights reserved.
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
 export V?=0
 
 # If _HOST or _TA specific compilers are not specified, then use CROSS_COMPILE

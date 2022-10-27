@@ -1,3 +1,8 @@
+#
+# Copyright (c) 2022 SECOM CO., LTD. All Rights reserved.
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
 CC      ?= $(CROSS_COMPILE)gcc
 LD      ?= $(CROSS_COMPILE)ld
 AR      ?= $(CROSS_COMPILE)ar
