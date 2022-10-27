@@ -11,13 +11,21 @@ It will be run on Qemu at IETF115, but will be run on a real device "Armadillo" 
 * [libcsuit](https://github.com/yuichitk/libcsuit)
 * [libteep](https://github.com/yuichitk/libteep)
 
-## Software Stack
-
-![Software Stack](docs/softwarestack.png "Software Stack")
-
 ## Screen Shot
 
 ![Screen Shot](docs/screenshot.jpg "Screen Shot")
+
+## Software Stack (As os October 27)
+
+![Software Stack](docs/softwarestack.png "Software Stack")
+
+## Software Stack (Ideal Stack at IETF115)
+
+![Software Stack](docs/softwarestack-ietf115.png "Software Stack")
+
+## Software Stack (Ideal Stack at IETF116)
+
+![Software Stack](docs/softwarestack-ietf116.png "Software Stack")
 
 ## License and Copyright
 
