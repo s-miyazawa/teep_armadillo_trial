@@ -1,6 +1,6 @@
 # teep_armadillo_trial
 
-`teep_armadillo_trial` is a proof of concept program to test the library for the [IETF TEEP Protocol](https://tools.ietf.org/html/draft-ietf-teep-protocol) protocol at the IETF115 hackathon.
+`teep_armadillo_trial` is a proof of concept program to test the library for the [IETF TEEP Protocol](https://tools.ietf.org/html/draft-ietf-teep-protocol) at the IETF115 hackathon.
 It will run on Qemu at IETF115, but will run on a real device "Armadillo" at IETF116.
 
 ## Requirement
