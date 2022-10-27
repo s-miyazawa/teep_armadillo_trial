@@ -19,7 +19,7 @@ It will run on Qemu at IETF115, but will run on a real device "Armadillo" at IET
 
 BSD 2-Clause License
 
-Copyright (c) 2020 SECOM CO., LTD. All Rights reserved.
+Copyright (c) 2022 SECOM CO., LTD. All Rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
