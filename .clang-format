@@ -1,0 +1,26 @@
+---
+BasedOnStyle: LLVM
+BreakBeforeBraces: Linux
+IndentCaseLabels: true
+IndentWidth: 4
+TabWidth: 4
+# AlignEscapedNewlinesLeft: true
+# AllowAllParametersOfDeclarationOnNextLine: true
+# AllowShortFunctionsOnASingleLine: All
+# AlwaysBreakTemplateDeclarations: true
+# ConstructorInitializerAllOnOneLineOrOnePerLine: false
+# IncludeCategories:
+#   - Regex:    '^<.*\.h>'
+#     Priority: 1
+#   - Regex:    '^<.*'
+#     Priority: 2
+#   - Regex:    '.*'
+#     Priority: 3
+# KeepEmptyLinesAtTheStartOfBlocks: false
+# ObjCSpaceBeforeProtocolList: false
+# PenaltyBreakBeforeFirstCallParameter: 1
+# PenaltyReturnTypeOnItsOwnLine: 300
+# PointerAlignment: Right
+# SpacesInContainerLiterals: false
+# SpacesInSquareBrackets: false
+...
