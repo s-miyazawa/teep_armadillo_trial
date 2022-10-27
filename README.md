@@ -15,6 +15,10 @@ It will run on Qemu at IETF115, but will run on a real device "Armadillo" at IET
 
 ![Software Stack](docs/softwarestack.png "Software Stack")
 
+## Screen Shot
+
+![Screen Shot](docs/screenshot.jpg "Screen Shot")
+
 ## License and Copyright
 
 BSD 2-Clause License
