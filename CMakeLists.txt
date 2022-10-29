@@ -9,9 +9,14 @@ project(teep_armadillo_trial C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(SRC host/main.c host/http_client.c host/http_client_cose.c host/sign_verify.c)
+message(STATUS "CMAKE_SOURCE_DIR        =${CMAKE_SOURCE_DIR}")
+message(STATUS "CMAKE_BINARY_DIR        =${CMAKE_BINARY_DIR}")
+message(STATUS "CMAKE_CURRENT_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}")
+message(STATUS "CMAKE_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}")
+
+set(SRC host/main.c host/http_client.c host/http_client_cose.c host/sign_verify.c host/http_client_simple_verifier.c host/rats_evidence.c)
 set(IETF_PACKAGES ${CMAKE_SOURCE_DIR}/../../../ietf-packages)
-set(TARGET_USRLIB ${CMAKE_SOURCE_DIR}/../../target/usr/lib)
+set(TARGET_USRLIB ${CMAKE_SOURCE_DIR}/../../per-package/optee_examples_ext/target/usr/lib)
 
 add_executable(${PROJECT_NAME} ${SRC})
 

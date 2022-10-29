@@ -1,9 +1,0 @@
-#
-# Copyright (c) 2022 SECOM CO., LTD. All Rights reserved.
-#
-# SPDX-License-Identifier: BSD-2-Clause
-#
-LOCAL_PATH := $(call my-dir)
-
-local_module := 8aaaf200-2450-11e4-abe2-0002a5d53830.ta
-include $(BUILD_OPTEE_MK)

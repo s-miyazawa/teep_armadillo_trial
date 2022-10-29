@@ -31,7 +31,7 @@
  * This UUID is generated with uuidgen
  * the ITU-T UUID generator at http://www.itu.int/ITU-T/asn1/uuid.html
  */
-#define TA_TEEP_ARMADILLO_TRIAL_UUID                                                    \
+#define TA_TEEP_ARMADILLO_TRIAL_UUID                                           \
     {                                                                          \
         0x8aaaf200, 0x2450, 0x11e4,                                            \
         {                                                                      \

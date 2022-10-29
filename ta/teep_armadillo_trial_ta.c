@@ -10,11 +10,27 @@
 #include <tee_internal_api_extensions.h>
 #include <tee_ta_api.h>
 
+#include "qcbor/qcbor_decode.h"
+
 #include <teep_armadillo_trial_ta.h>
 
 #include "ta_keys.h"
 
 #define MAX_HASH_OUTPUT_LENGTH 32 /* sha256 */
+void test_libqcbor(void);
+
+void test_libqcbor(void)
+{
+    uint8_t buf[] = {0x17};
+    int len = sizeof(buf);
+    QCBORDecodeContext context;
+    QCBORDecode_Init(&context, (UsefulBufC){buf, len},
+                     QCBOR_DECODE_MODE_NORMAL);
+    DMSG("QCBORDecode_Init(&context, (UsefulBufC){buf, "
+         "len},QCBORDecode_Init(&context, (UsefulBufC){buf, "
+         "len},QCBORDecode_Init(&context, (UsefulBufC){buf, len},");
+    QCBORDecode_Finish(&context);
+}
 
 int dmsg_hex(const uint8_t *array, const size_t size);
 
@@ -127,6 +143,8 @@ static TEE_Result ta_sign_es256(uint32_t param_types, TEE_Param parameters[4])
     size_t hash_len = MAX_HASH_OUTPUT_LENGTH;
     char sig[200] = {0};
     uint32_t sig_len = 200;
+
+    (void)param_types;
 
     char inbuf[512] = {0};
     size_t inbuf_len = parameters[0].memref.size;
@@ -278,6 +296,7 @@ TEE_Result TA_InvokeCommandEntryPoint(void __maybe_unused *sess_ctx,
 
     switch (cmd_id) {
         case TA_SIGN_ES256_CMD:
+		test_libqcbor();
             return ta_sign_es256(param_types, params);
         default:
             return TEE_ERROR_BAD_PARAMETERS;

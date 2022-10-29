@@ -6,6 +6,7 @@
  */
 
 #include "http_client.h"
+#include "http_client_simple_verifier.h"
 #include "sign_verify.h"
 
 const unsigned char example_data[] = {
@@ -19,6 +20,9 @@ const unsigned char example_data[] = {
 
 int main(int argc, char *argv[])
 {
+    /* Interaction with simple verifier */
+    simple_verifier_client();
+
     /* Interaction test with tamproto server */
     http_main(argc, (const char **)argv);
 
