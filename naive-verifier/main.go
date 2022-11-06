@@ -16,8 +16,6 @@ import (
 
 // postVerify
 func postVerify(c *gin.Context) {
-	// Call BindJSON to bind the received JSON to
-	// newAlbum.
 	evidence, err := c.GetRawData()
 	if err != nil {
 		fmt.Println("Erro: ", err)
@@ -35,11 +33,6 @@ func postVerify(c *gin.Context) {
 }
 
 func SignP256(data []byte, privateKey *ecdsa.PrivateKey) ([]byte, error) {
-	// create a signer
-	// privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
-	// if err != nil {
-	// 	return nil, err
-	// }
 	signer, err := cose.NewSigner(cose.AlgorithmES256, privateKey)
 	if err != nil {
 		return nil, err
@@ -63,7 +56,6 @@ type evidence struct {
 }
 
 func VerifyP256(publicKey crypto.PublicKey, sig []byte) error {
-	// create a verifier from a trusted private key
 	verifier, err := cose.NewVerifier(cose.AlgorithmES256, publicKey)
 	if err != nil {
 		return err
