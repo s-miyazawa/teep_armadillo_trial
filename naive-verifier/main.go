@@ -18,7 +18,6 @@ import (
 // postVerify
 func postVerify(c *gin.Context) {
 	privateKey := createPrivateKey()
-
 	evidence, err := c.GetRawData()
 	if err != nil {
 		fmt.Println("postVerify Err: ", err)
@@ -72,7 +71,6 @@ type attestationResult struct {
 }
 
 func VerifyP256(publicKey crypto.PublicKey, sig []byte) error {
-	// create a verifier from a trusted private key
 	verifier, err := cose.NewVerifier(cose.AlgorithmES256, publicKey)
 	if err != nil {
 		return err
