@@ -7,6 +7,7 @@ import (
 	"crypto/rand"
 	"fmt"
 	"math/big"
+	"net/http"
 	"time"
 
 	"github.com/fxamacker/cbor/v2"
@@ -16,14 +17,12 @@ import (
 
 // postVerify
 func postVerify(c *gin.Context) {
-	// Call BindJSON to bind the received JSON to
-	// newAlbum.
+	privateKey := createPrivateKey()
+
 	evidence, err := c.GetRawData()
 	if err != nil {
-		fmt.Println("Erro: ", err)
+		fmt.Println("postVerify Err: ", err)
 	}
-
-	privateKey := createPrivateKey()
 
 	err = VerifyP256(privateKey.Public(), evidence)
 	if err != nil {
@@ -31,15 +30,19 @@ func postVerify(c *gin.Context) {
 	}
 	fmt.Println("verify OK.")
 	fmt.Println("evidence = ", evidence)
+
+	Ar := attestationResult{}
+	Ar.Issuer = []byte("Verifier")
+	Ar.Time = 0
+	Ar.Nonce = []byte("hoge")
+
+	arByte, err := cbor.Marshal(Ar)
+	c.Data(http.StatusOK, "application/eat-cwt", arByte)
+
 	return
 }
 
 func SignP256(data []byte, privateKey *ecdsa.PrivateKey) ([]byte, error) {
-	// create a signer
-	// privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
-	// if err != nil {
-	// 	return nil, err
-	// }
 	signer, err := cose.NewSigner(cose.AlgorithmES256, privateKey)
 	if err != nil {
 		return nil, err
@@ -57,6 +60,12 @@ func SignP256(data []byte, privateKey *ecdsa.PrivateKey) ([]byte, error) {
 }
 
 type evidence struct {
+	Issuer []byte `cbor:"1,keyasint,omitempty"`
+	Time   int64  `cbor:"6,keyasint,omitempty"`
+	Nonce  []byte `cbor:"10,keyasint,omitempty"`
+}
+
+type attestationResult struct {
 	Issuer []byte `cbor:"1,keyasint,omitempty"`
 	Time   int64  `cbor:"6,keyasint,omitempty"`
 	Nonce  []byte `cbor:"10,keyasint,omitempty"`
