@@ -5,5 +5,15 @@
 #
 .cache/
 build/
+ta/dyn_list
+ta/qcbor/
+ta/t_cose/
+ta/ta.lds
 compile_commands.json
 *.o
+*.cmd
+*.dmp
+*.elf
+*.map
+*.d
+*.ta
