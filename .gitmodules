@@ -1,0 +1,9 @@
+[submodule "libs/libteep"]
+	path = libs/libteep
+	url = git@github.com:yuichitk/libteep.git
+[submodule "libs/QCBOR"]
+	path = libs/QCBOR
+	url = git@github.com:laurencelundblade/QCBOR.git
+[submodule "libs/t_cose"]
+	path = libs/t_cose
+	url = git@github.com:laurencelundblade/t_cose.git

@@ -1,0 +1,49 @@
+Only in .: libs.patch
+diff -r -u ./libteep/inc/teep/teep_cose.h ../../ta_cose/libs/libteep/inc/teep/teep_cose.h
+--- ./libteep/inc/teep/teep_cose.h	2023-02-24 16:22:05.146355042 +0900
++++ ../../ta_cose/libs/libteep/inc/teep/teep_cose.h	2023-02-24 16:13:24.365384783 +0900
+@@ -13,6 +13,7 @@
+ #include "t_cose/t_cose_sign1_sign.h"
+ #if defined(LIBTEEP_PSA_CRYPTO_C)
+ #include "psa/crypto.h"
++#elif defined(LIBTEEP_OPTEE_CRYPTO_C)
+ #else
+ #include "openssl/evp.h"
+ #include "openssl/ec.h"
+diff -r -u ./t_cose/inc/t_cose/t_cose_common.h ../../ta_cose/libs/t_cose/inc/t_cose/t_cose_common.h
+--- ./t_cose/inc/t_cose/t_cose_common.h	2023-02-24 16:23:07.147591809 +0900
++++ ../../ta_cose/libs/t_cose/inc/t_cose/t_cose_common.h	2023-02-24 16:13:24.381385567 +0900
+@@ -161,7 +161,9 @@
+     T_COSE_CRYPTO_LIB_OPENSSL = 1,
+      /** \c key_handle is a \c psa_key_handle_t in Arm's Platform Security
+       * Architecture */
+-    T_COSE_CRYPTO_LIB_PSA = 2
++    T_COSE_CRYPTO_LIB_PSA = 2,
++
++    T_COSE_CRYPTO_LIB_OPTEE = 3
+ };
+ 
+ 
+diff -r -u ./t_cose/src/t_cose_crypto.h ../../ta_cose/libs/t_cose/src/t_cose_crypto.h
+--- ./t_cose/src/t_cose_crypto.h	2023-02-24 16:23:07.147591809 +0900
++++ ../../ta_cose/libs/t_cose/src/t_cose_crypto.h	2023-02-24 16:13:24.381385567 +0900
+@@ -397,6 +397,9 @@
+  * of t_cose_crypto_hash
+  */
+ #include "sha256.h"
++
++#elif T_COSE_USE_OPTEE_GP_CRYPTO
++#include "tee_ta_api.h"
+ #endif
+ 
+ 
+@@ -455,6 +458,9 @@
+         /* --- Specific context for Brad Conte's sha256.c --- */
+         SHA256_CTX b_con_hash_context;
+ 
++   #elif T_COSE_USE_OPTEE_GP_CRYPTO
++	TEE_OperationHandle ctx;
++	TEE_Result status;
+    #else
+     /* --- Default: generic pointer / handle --- */
+ 

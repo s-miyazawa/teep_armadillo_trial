@@ -1,0 +1,71 @@
+# -*- mode:Makefile -*-
+#
+# Copyright (c) 2023 SECOM CO., LTD. All Rights reserved.
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
+
+
+export
+PWD:=                   $(shell pwd)
+TA_DEV_KIT_DIR:=        $(PWD)/../imx-boot/imx-optee-os/out/export-ta_arm64
+TA_SIGN_KEY:=           $(PWD)/../imx-boot/imx-optee-os/keys/default_ta.pem
+CROSS_COMPILE:=         aarch64-linux-gnu-
+TA_CROSS_COMPILE:=      $(CROSS_COMPILE)
+HOST_CROSS_COMPILE:=    $(CROSS_COMPILE)
+DESTDIR:=               $(PWD)/../out
+OPTEE_CLIENT_EXPORT:=   $(DESTDIR)/usr
+OPTEE_CLIENT_SDK:=   $(DESTDIR)/usr
+TEEC_EXPORT:=           $(DESTDIR)/usr
+EXLIB_PATH :=           $(PWD)/libs
+
+
+# If _HOST or _TA specific compilers are not specified, then use CROSS_COMPILE
+HOST_CROSS_COMPILE ?= $(CROSS_COMPILE)
+TA_CROSS_COMPILE ?= $(CROSS_COMPILE)
+
+.PHONY: teep_broker teep_agent_ta exlibs clean-host clean-ta clean-exlibs clean qcbor t_cose libteep clean-qcbor clean-t_cose clean-lib_teep
+
+all: teep_broker teep_agent_ta
+
+########################################
+# compile
+########################################
+teep_broker:
+	$(MAKE) -C teep_broker -f Makefile.armadillo
+
+teep_agent_ta: exlibs
+	$(MAKE) -C teep_agent_ta CROSS_COMPILE="$(TA_CROSS_COMPILE)" --no-builtin-variables LDFLAGS=""
+
+exlibs: libteep
+
+qcbor:
+	$(MAKE) -C $(EXLIB_PATH)/QCBOR.build   CROSS_COMPILE="$(HOST_CROSS_COMPILE)"
+t_cose: qcbor
+	$(MAKE) -C $(EXLIB_PATH)/t_cose.build  CROSS_COMPILE="$(HOST_CROSS_COMPILE)"
+libteep: t_cose
+	$(MAKE) -C $(EXLIB_PATH)/libteep.build  CROSS_COMPILE="$(HOST_CROSS_COMPILE)"
+
+########################################
+# clean
+########################################
+clean-host:
+	$(MAKE) -C teep_broker clean
+	rm -rf bin/teep_broker .cache
+clean-ta:
+	$(MAKE) -C teep_agent_ta clean
+clean-qcbor:
+	$(MAKE) -C $(EXLIB_PATH)/QCBOR.build clean
+clean-t_cose:
+	$(MAKE) -C $(EXLIB_PATH)/t_cose.build clean
+clean-lib_teep:
+	$(MAKE) -C $(EXLIB_PATH)/libteep.build clean
+
+clean: clean-qcbor clean-t_cose clean-lib_teep clean-ta clean-host
+
+########################################
+# install
+########################################
+install: all
+	install -D -t $(DESTDIR)/usr/bin -m755 teep_broker/teep_broker
+	install -D -t $(DESTDIR)/lib/optee_armtz -m644 teep_agent_ta/*.ta

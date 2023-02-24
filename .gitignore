@@ -1,0 +1,15 @@
+.clang-format
+compile_commands.json
+*.o
+*.a
+*.d
+*.cmd
+*.elf
+*.ta
+*.dmp
+*.map
+dyn_list
+*.lds
+teep_broker/teep_broker
+.cache/
+bin/
