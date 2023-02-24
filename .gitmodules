@@ -1,6 +1,6 @@
 [submodule "libs/libteep"]
 	path = libs/libteep
-	url = git@github.com:yuichitk/libteep.git
+	url = git@github.com:kentakayama/libteep.git
 [submodule "libs/QCBOR"]
 	path = libs/QCBOR
 	url = git@github.com:laurencelundblade/QCBOR.git
