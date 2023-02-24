@@ -4,6 +4,14 @@ This is a program to demonstrate the TEEP protocol on a real device.
 This will be demonstrated at IETF 116.
 We will use an Armadillo-IoT Gateway G4 as a real device.
 
+## Architecture
+
+![Architecture](./docs/architecture.png)
+
+## Sequence
+
+![Sequence](./docs/sequence.png)
+
 ## Directory Structure
 
 ````
@@ -87,14 +95,6 @@ buildroot login: root
 # cd /mnt/host/teep_armadillo_trial/
 # ./tools/install.sh && ./bin/teep_broker
 ````
-
-## Architecture
-
-![Architecture](./docs/architecture.png)
-
-## Sequence
-
-![Sequence](./docs/sequence.png)
 
 ## License and Copyright
 
