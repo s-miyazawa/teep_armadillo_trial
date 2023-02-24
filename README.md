@@ -88,6 +88,14 @@ buildroot login: root
 # ./tools/install.sh && ./bin/teep_broker
 ````
 
+## Architecture
+
+![Architecture](./docs/architecture.png)
+
+## Sequence
+
+![Sequence](./docs/sequence.png)
+
 ## License and Copyright
 
 BSD 2-Clause License
