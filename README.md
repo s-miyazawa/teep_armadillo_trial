@@ -27,6 +27,14 @@ We will use an Armadillo-IoT Gateway G4 as a real device.
 └── 📁 teep_broker (TEEP Broker: Normal Application running in REE. The TEEP Broker acts as an intermediary between the TAM and the TEEP Agent.)
 ````
 
+TEEP Armadillo Trial uses the following libraries.
+
+* [QCBOR](https://github.com/laurencelundblade/QCBOR)
+* [t_cose](https://github.com/laurencelundblade/t_cose)
+* [libteep](https://github.com/kentakayama/libteep)
+
+TEEP Armadiilo Trial uses [tamproto](https://github.com/kentakayama/libcsuit) to test the TEEP protocol.
+
 ## Installation
 
 Put the `teep_armadillo_trial` directory and the optee directory in the same directory at the same level as shown below.
