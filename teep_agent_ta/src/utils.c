@@ -30,7 +30,7 @@ bool teep_agent_sign(UsefulBuf *workbuf, UsefulBufC *sign_target,
 
     t_cose_sign1_sign_init(&sign_ctx, 0, T_COSE_ALGORITHM_ES256);
     t_cose_sign1_set_signing_key(&sign_ctx, teep_agent_key_pair,
-                                 NULL_Q_USEFUL_BUF_C);
+                                 Q_USEFUL_BUF_FROM_SZ_LITERAL("101"));
     t_cose_res =
         t_cose_sign1_sign(&sign_ctx, *sign_target, *workbuf, signed_cose);
     if (T_COSE_SUCCESS != t_cose_res) {

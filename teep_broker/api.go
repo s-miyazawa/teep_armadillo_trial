@@ -50,6 +50,33 @@ func getVerifierNonce(url string) []byte {
 	return verifierNonceBin
 }
 
+func getAttestationResult(url string, evidenceBin []byte) []byte {
+	client := &http.Client{}
+
+	req, err := http.NewRequest("POST", url, bytes.NewReader(evidenceBin))
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	req.Header.Set("Accept", "application/teep+cbor")
+	req.Header.Add("User-Agent", "Foo/1.0")
+	req.Header.Add("Content-Type", "application/teep+cbor")
+
+	res, err := client.Do(req)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	defer res.Body.Close()
+	//ReadAllでResponse Bodyを読み切る
+	attestationResultBin, err := io.ReadAll(res.Body)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	return attestationResultBin
+
+}
+
 func sendQueryResponse(url string, queryResponseBin []byte) []byte {
 	client := &http.Client{}
 

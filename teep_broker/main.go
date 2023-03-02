@@ -68,12 +68,9 @@ func main() {
 	// 4.2. TeepBroker <--- {AttestationResultBin} --- Verifier
 	//
 	// ----------------------------------------------------------------------
-	// attestationResutlBin = send(Evidence, Verifier)
-	//const dummyAR = "d28443a10126a10"
-	//var attestationResultBin = hexstr2bin(dummyAR)
-	//fmt.Print("\n[attestationResultBin]\n")
-	//printAsCbor(attestationResultBin)
-	var attestationResultBin = evidenceBin
+	attestationResultBin := getAttestationResult(verifierUrl, evidenceBin)
+	fmt.Printf("\n[attestationResultBin]\n")
+	printAsCbor(attestationResultBin)
 
 	// ----------------------------------------------------------------------
 	// 5. create QueryResponse
