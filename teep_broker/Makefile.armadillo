@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: BSD-2-Clause
 #
-export CC=aarch64-linux-gnu-gcc
+# export CC=musl-gcc
 export CGO_CFLAGS =-I$(OPTEE_CLIENT_SDK)/include -I../teep_agent_ta/include
 export CGO_LDFLAGS =-L$(OPTEE_CLIENT_SDK)/lib -lteec
 export CGO_ENABLED=1

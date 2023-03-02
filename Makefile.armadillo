@@ -5,12 +5,10 @@
 # SPDX-License-Identifier: BSD-2-Clause
 #
 
-
 export
 PWD:=                   $(shell pwd)
 TA_DEV_KIT_DIR:=        $(PWD)/../imx-boot/imx-optee-os/out/export-ta_arm64
 TA_SIGN_KEY:=           $(PWD)/../imx-boot/imx-optee-os/keys/default_ta.pem
-CROSS_COMPILE:=         aarch64-linux-gnu-
 TA_CROSS_COMPILE:=      $(CROSS_COMPILE)
 HOST_CROSS_COMPILE:=    $(CROSS_COMPILE)
 DESTDIR:=               $(PWD)/../out
@@ -18,7 +16,6 @@ OPTEE_CLIENT_EXPORT:=   $(DESTDIR)/usr
 OPTEE_CLIENT_SDK:=   $(DESTDIR)/usr
 TEEC_EXPORT:=           $(DESTDIR)/usr
 EXLIB_PATH :=           $(PWD)/libs
-
 
 # If _HOST or _TA specific compilers are not specified, then use CROSS_COMPILE
 HOST_CROSS_COMPILE ?= $(CROSS_COMPILE)
