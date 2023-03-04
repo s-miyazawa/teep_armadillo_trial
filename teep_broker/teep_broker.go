@@ -6,8 +6,23 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
+
+	"github.com/fxamacker/cbor"
+	"github.com/s-miyazawa/teep_armadillo_trial/teep_broker/tee"
+	"github.com/s-miyazawa/teep_armadillo_trial/teep_broker/teep"
 )
+
+func printAsCbor(bin []byte) {
+	log.Printf("bin: %x\n", bin)
+
+	var val interface{}
+	if err := cbor.Unmarshal(bin, &val); err != nil {
+	} else {
+		log.Printf("cbor: %x\n", val)
+	}
+}
 
 func main() {
 	// ----------------------------------------------------------------------
@@ -25,7 +40,7 @@ func main() {
 	if len(os.Args) > 1 {
 		tamUrl = os.Args[1]
 	}
-	queryRequestBin := getQueryRequest(tamUrl)
+	queryRequestBin := teep.GetQueryRequest(tamUrl)
 	fmt.Printf("\n[queryRequestBin]\n")
 	printAsCbor(queryRequestBin)
 
@@ -42,7 +57,7 @@ func main() {
 	if len(os.Args) > 2 {
 		verifierUrl = os.Args[2]
 	}
-	verifierNonceBin := getVerifierNonce(verifierUrl)
+	verifierNonceBin := teep.GetVerifierNonce(verifierUrl)
 	fmt.Printf("\n[verifierNonceBin]\n")
 	printAsCbor(verifierNonceBin)
 
@@ -55,7 +70,7 @@ func main() {
 	// 3.2. TeepBroker <--------- {Evidence}, TamTokenBin --------- TeepAgent
 	//
 	// ----------------------------------------------------------------------
-	evidenceBin, tamTokenBin := createEvidence(queryRequestBin, verifierNonceBin)
+	evidenceBin, tamTokenBin := tee.CreateEvidence(queryRequestBin, verifierNonceBin)
 	fmt.Printf("\n[evidenceBin]\n")
 	printAsCbor(evidenceBin)
 	fmt.Print("\n[tamTokenBin]\n")
@@ -68,7 +83,7 @@ func main() {
 	// 4.2. TeepBroker <--- {AttestationResultBin} --- Verifier
 	//
 	// ----------------------------------------------------------------------
-	attestationResultBin := getAttestationResult(verifierUrl, evidenceBin)
+	attestationResultBin := teep.GetAttestationResult(verifierUrl, evidenceBin)
 	fmt.Printf("\n[attestationResultBin]\n")
 	printAsCbor(attestationResultBin)
 
@@ -80,7 +95,7 @@ func main() {
 	// 5.2. TeepBroker <------------- {QueryResponse} ------------- TeepAgent
 	//
 	// ----------------------------------------------------------------------
-	var queryResponseBin = createQueryResponse(attestationResultBin, tamTokenBin)
+	var queryResponseBin = tee.CreateQueryResponse(attestationResultBin, tamTokenBin)
 	fmt.Print("\n[queryResponseBin]\n")
 	printAsCbor(queryResponseBin)
 
@@ -91,7 +106,7 @@ func main() {
 	//
 	// 6.2. TeepBroker <------- [{Update}]---------- TAM
 	// ----------------------------------------------------------------------
-	updateBin := sendQueryResponse(tamUrl, queryResponseBin)
+	updateBin := teep.SendQueryResponse(tamUrl, queryResponseBin)
 
 	// ----------------------------------------------------------------------
 	// 7. receive Update form the TAM

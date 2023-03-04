@@ -11,32 +11,6 @@
 #include "teep_agent_ta.h"
 #include "tee_interface.h"
 
-static bool to_hex(char *dest, size_t dest_len, const uint8_t *values,
-                   size_t val_len)
-{
-    static const char hex_table[] = "0123456789ABCDEF";
-    if (dest_len < (val_len * 2 + 1)) /* check that dest is large enough */
-        return false;
-    while (val_len--) {
-        /* shift down the top nibble and pick a char from the hex_table */
-        *dest++ = hex_table[*values >> 4];
-        /* extract the bottom nibble and pick a char from the hex_table */
-        *dest++ = hex_table[*values++ & 0xF];
-    }
-    *dest = 0;
-    return true;
-}
-
-static void print_binary(const void *object, uint32_t size,
-                         const char *object_name)
-{
-    size_t hexstr_size = size * sizeof(char) * 2 + 1;
-    char *hexstr = (char *)malloc(hexstr_size);
-    to_hex(hexstr, hexstr_size, object, size);
-    printf("[%s(%d)] %s\n", object_name, size, hexstr);
-    free(hexstr);
-}
-
 size_t invoke_teep_agent(const char *in_data1, size_t in_data_size1,
                          const char *in_data2, size_t in_data_size2,
                          char *out_data1, size_t *out_data_size1,

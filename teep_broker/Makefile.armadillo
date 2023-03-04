@@ -1,24 +1,24 @@
 # -*- mode:Makefile -*-
+#
 # Copyright (c) 2023 SECOM CO., LTD. All Rights reserved.
 #
 # SPDX-License-Identifier: BSD-2-Clause
 #
-# export CC=musl-gcc
-export CGO_CFLAGS =-I$(OPTEE_CLIENT_SDK)/include -I../teep_agent_ta/include
+export CGO_CFLAGS =-I$(OPTEE_CLIENT_SDK)/include -I$(shell pwd)/../teep_agent_ta/include
 export CGO_LDFLAGS =-L$(OPTEE_CLIENT_SDK)/lib -lteec
 export CGO_ENABLED=1
 
 .PHONY: all clean
 
-SRCS=go.mod tee_interface.c tee_interface.h main.go go.mod go.sum
+SRCS=go.mod tee/tee_interface.c tee/tee_interface.h teep_broker.go go.mod go.sum
 
 all: teep_broker
 
-tee_interface.o: tee_interface.c tee_interface.h
-	$(CC) $(CGO_CFLAGS) $(CGO_LDFLAGS) -c tee_interface.c
+tee/tee_interface.o: tee/tee_interface.c tee/tee_interface.h
+	$(CC) $(CGO_CFLAGS) $(CGO_LDFLAGS) -c tee/tee_interface.c
 
 clean:
 	rm -rf teep_broker *.o
 
-teep_broker: $(SRCS) tee_interface.o
+teep_broker: $(SRCS) tee/tee_interface.o
 	go build

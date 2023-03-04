@@ -1,3 +1,4 @@
+# -*- mode:Makefile -*-
 #
 # Copyright (c) 2023 SECOM CO., LTD. All Rights reserved.
 #
@@ -30,7 +31,7 @@ all: teep_broker teep_agent_ta
 # compile
 ########################################
 teep_broker:
-	$(MAKE) -C teep_broker
+	$(MAKE) -C teep_broker -f Makefile.qemu
 
 teep_agent_ta: exlibs
 	$(MAKE) -C teep_agent_ta CROSS_COMPILE="$(TA_CROSS_COMPILE)" --no-builtin-variables LDFLAGS=""
@@ -48,7 +49,7 @@ libteep: t_cose
 # clean
 ########################################
 clean-host:
-	$(MAKE) -C teep_broker clean
+	$(MAKE) -C teep_broker -f Makefile.qemu clean
 	rm -rf bin/teep_broker .cache
 clean-ta:
 	$(MAKE) -C teep_agent_ta clean
