@@ -9,19 +9,12 @@ import (
 	"log"
 	"os"
 
-	"github.com/fxamacker/cbor"
 	"github.com/s-miyazawa/teep_armadillo_trial/teep_broker/tee"
 	"github.com/s-miyazawa/teep_armadillo_trial/teep_broker/teep"
 )
 
 func printAsCbor(bin []byte) {
-	log.Printf("bin: %x\n", bin)
-
-	var val interface{}
-	if err := cbor.Unmarshal(bin, &val); err != nil {
-	} else {
-		log.Printf("cbor: %x\n", val)
-	}
+	log.Printf("%X\n", bin)
 }
 
 func main() {
@@ -41,9 +34,10 @@ func main() {
 		tamUrl = os.Args[1]
 	}
 	queryRequestBin := teep.GetQueryRequest(tamUrl)
+	fmt.Printf("\x1b[31m")
 	fmt.Printf("\n[queryRequestBin]\n")
 	printAsCbor(queryRequestBin)
-
+	fmt.Printf("\x1b[0m")
 	// ----------------------------------------------------------------------
 	// 2. request "VerifierNonce" to the Veirifier
 	//
@@ -58,9 +52,10 @@ func main() {
 		verifierUrl = os.Args[2]
 	}
 	verifierNonceBin := teep.GetVerifierNonce(verifierUrl)
+	fmt.Printf("\x1b[32m")
 	fmt.Printf("\n[verifierNonceBin]\n")
 	printAsCbor(verifierNonceBin)
-
+	fmt.Printf("\x1b[0m")
 	// ----------------------------------------------------------------------
 	// 3. create Evidence
 	//
@@ -71,10 +66,16 @@ func main() {
 	//
 	// ----------------------------------------------------------------------
 	evidenceBin, tamTokenBin := tee.CreateEvidence(queryRequestBin, verifierNonceBin)
+
+	fmt.Printf("\x1b[33m")
 	fmt.Printf("\n[evidenceBin]\n")
 	printAsCbor(evidenceBin)
+	fmt.Printf("\x1b[0m")
+
+	fmt.Printf("\x1b[34m")
 	fmt.Print("\n[tamTokenBin]\n")
 	printAsCbor(tamTokenBin)
+	fmt.Printf("\x1b[0m")
 
 	// 4. request Attestation Result to the Verifier
 	//
@@ -84,8 +85,10 @@ func main() {
 	//
 	// ----------------------------------------------------------------------
 	attestationResultBin := teep.GetAttestationResult(verifierUrl, evidenceBin)
+	fmt.Printf("\x1b[35m")
 	fmt.Printf("\n[attestationResultBin]\n")
 	printAsCbor(attestationResultBin)
+	fmt.Printf("\x1b[0m")
 
 	// ----------------------------------------------------------------------
 	// 5. create QueryResponse
@@ -96,8 +99,10 @@ func main() {
 	//
 	// ----------------------------------------------------------------------
 	var queryResponseBin = tee.CreateQueryResponse(attestationResultBin, tamTokenBin)
+	fmt.Printf("\x1b[36m")
 	fmt.Print("\n[queryResponseBin]\n")
 	printAsCbor(queryResponseBin)
+	fmt.Printf("\x1b[0m")
 
 	// ----------------------------------------------------------------------
 	// 6. send QueryResponse (inc. AR and token) to the TAM
@@ -111,8 +116,10 @@ func main() {
 	// ----------------------------------------------------------------------
 	// 7. receive Update form the TAM
 	// ----------------------------------------------------------------------
+	fmt.Printf("\x1b[37m")
 	fmt.Print("\n[updateBin]\n")
 	printAsCbor(updateBin)
+	fmt.Printf("\x1b[0m")
 
 	// ----------------------------------------------------------------------
 	// 8. send Success to the TAM
