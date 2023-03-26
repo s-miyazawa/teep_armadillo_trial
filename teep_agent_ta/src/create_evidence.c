@@ -31,6 +31,15 @@ static QCBORError build_evidence(UsefulBufC in_eat_nonce,
     QCBOREncode_Init(&cbor_encode, out_evidence_cbor_buffer);
     QCBOREncode_OpenMap(&cbor_encode);
 
+    /* /cnf/ 8: {3: h'fb30d5697e41ae46ab43357cea7aceb91132ed85c1634899d3c198d16cbce718'} */
+    QCBOREncode_OpenMapInMapN(&cbor_encode, 8);
+    UsefulBufC cnf = (UsefulBufC){(uint8_t[]){0xfb, 0x30, 0xd5, 0x69, 0x7e, 0x41, 0xae, 0x46, 0xab, 0x43, 0x35,
+                                              0x7c, 0xea, 0x7a, 0xce, 0xb9, 0x11, 0x32, 0xed, 0x85, 0xc1, 0x63,
+                                              0x48, 0x99, 0xd3, 0xc1, 0x98, 0xd1, 0x6c, 0xbc, 0xe7, 0x18},
+                                  32};
+    QCBOREncode_AddBytesToMapN(&cbor_encode, 3, cnf);
+    QCBOREncode_CloseMap(&cbor_encode);
+
     /* / eat_nonce /       10: h'948f8860d13a463e’ */
     QCBOREncode_AddBytesToMapN(&cbor_encode, 10, in_eat_nonce);
 
