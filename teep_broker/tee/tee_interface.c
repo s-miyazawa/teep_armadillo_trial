@@ -80,7 +80,7 @@ size_t invoke_teep_agent(const char *in_data1, size_t in_data_size1,
     op.params[3].memref.size = shm2.size;
     op.params[3].memref.offset = 0;
 
-    printf("\n[Broker -> Agent] (commandId: %d)\n", commandId);
+    /* printf("\n[Broker -> Agent] (commandId: %d)\n", commandId); */
     res = TEEC_InvokeCommand(&sess, commandId, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
         errx(1, "TEEC_InvokeCommand failed with code 0x%x origin 0x%x", res,

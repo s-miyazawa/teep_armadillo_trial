@@ -34,6 +34,7 @@ static QCBORError build_evidence(UsefulBufC in_eat_nonce,
     /* / eat_nonce /       10: h'948f8860d13a463e’ */
     QCBOREncode_AddBytesToMapN(&cbor_encode, 10, in_eat_nonce);
 
+
     /* / ueid / 256: h'0198f50a4ff6c05861c8860d13a638ea', */
     QCBOREncode_AddBytesToMapN(
         &cbor_encode, 256,
@@ -57,7 +58,8 @@ static QCBORError build_evidence(UsefulBufC in_eat_nonce,
     /* / verifier_nonce / -70000: h'948f8860d13a463e8e’ */
     QCBOREncode_AddBytesToMapN(&cbor_encode, -70000, in_verifier_nonce);
     /* / hwversion /      260: ["1.3.4", 1], / Multipartnumeric  / */
-    QCBOREncode_OpenArray(&cbor_encode);
+
+    QCBOREncode_OpenArrayInMapN(&cbor_encode, 260);
     QCBOREncode_AddText(&cbor_encode, ((UsefulBufC){ "1.3.4", 5 }));
     QCBOREncode_AddInt64(&cbor_encode, 1);
     QCBOREncode_CloseArray(&cbor_encode);
@@ -71,7 +73,7 @@ static void parse_query_request(const teep_query_request_t *query_request)
     /* ************************************************************ */
     /* version check */
     /* ************************************************************ */
-    if (query_request->contains & TEEP_MESSAGE_CONTAINS_VERSION) {
+    if (query_request->contains & TEEP_MESSAGE_CONTAINS_VERSIONS) {
         for (size_t i = 0; i < query_request->versions.len; i++) {
             DMSG("QUERY_REQUEST:version[%d] = %d", (uint32_t)i,
                  query_request->versions.items[i]);
@@ -80,11 +82,11 @@ static void parse_query_request(const teep_query_request_t *query_request)
     /* ************************************************************ */
     /* cipher suit check */
     /* ************************************************************ */
-    for (size_t i = 0; i < query_request->supported_cipher_suites.len; i++) {
+    for (size_t i = 0; i < query_request->supported_teep_cipher_suites.len; i++) {
         DMSG("QUERY_REQUEST:CIPHER_SUIT item[%d] = %d", (uint32_t)i,
-             query_request->supported_cipher_suites.items[i]
+             query_request->supported_teep_cipher_suites.items[i]
                  .mechanisms->algorithm_id);
-        if (query_request->supported_cipher_suites.items[i]
+        if (query_request->supported_teep_cipher_suites.items[i]
                 .mechanisms->algorithm_id == TEEP_COSE_SIGN_ES256) {
             DMSG("QUERY_REQUEST:CIPHER_SUIT OK ES256");
         }
@@ -98,22 +100,14 @@ static void parse_query_request(const teep_query_request_t *query_request)
              query_request->supported_freshness_mechanisms.items[i]);
         /* } */
     }
-
-    if (query_request->data_item_requested & BIT(TEEP_DATA_ITEM_INVALID)) {
-        DMSG("QUERIY_REQUEST:Request Items:INVALID");
-    } else {
-        if (query_request->data_item_requested &
-            BIT(TEEP_DATA_ITEM_ATTESTATION)) {
-            DMSG("QUERIY_REQUEST:Request Items:ATTESTATION");
-        }
-        if (query_request->data_item_requested &
-            BIT(TEEP_DATA_ITEM_TRUSTED_COMPONENTS)) {
-            DMSG("QUERIY_REQUEST:Request Items:TRUSTED_COMPONENTS");
-        }
-        if (query_request->data_item_requested &
-            BIT(TEEP_DATA_ITEM_EXTENTIONS)) {
-            DMSG("QUERIY_REQUEST:Request Items:TRUSTED_EXTENTIONS");
-        }
+    if (query_request->data_item_requested.attestation) {
+        DMSG("QUERIY_REQUEST:Request Items:ATTESTATION");
+    }
+    if (query_request->data_item_requested.trusted_components) {
+        DMSG("QUERIY_REQUEST:Request Items:TRUSTED_COMPONENTS");
+    }
+    if (query_request->data_item_requested.extensions) {
+        DMSG("QUERIY_REQUEST:Request Items:TRUSTED_EXTENTIONS");
     }
 
     /* } */

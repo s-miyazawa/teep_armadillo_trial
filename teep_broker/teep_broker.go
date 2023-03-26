@@ -5,6 +5,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"os"
@@ -34,10 +35,60 @@ func main() {
 		tamUrl = os.Args[1]
 	}
 	queryRequestBin := teep.GetQueryRequest(tamUrl)
-	fmt.Printf("\x1b[31m")
-	fmt.Printf("\n[queryRequestBin]\n")
+
+	const GREEN_REVERSE = "\x1b[7m\x1b[32m"
+	const ORANGE_REVERSE = "\x1b[7m\x1b[33m"
+	const PURPLE_REVERSE = "\x1b[7m\x1b[35m"
+	const WHITE_REVERSE = "\x1b[7m\x1b[47m"
+
+	const GREEN_STR = "\x1b[32m"
+	const ORANGE_STR = "\x1b[33m"
+	const PURPLE_STR = "\x1b[35m"
+
+	const STRING_RESET = "\x1b[9m\x1b[0m"
+
+	const BORDER_STR = WHITE_REVERSE + "\n.............................................................................." + STRING_RESET + "\n"
+
+	// 1.1. TeepBroker -----------[""]----------> TAM
+	fmt.Printf(BORDER_STR)
+	fmt.Printf("1.1. ")
+	fmt.Printf(GREEN_REVERSE)
+	fmt.Printf("Teep Broker")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" ------ ")
+	fmt.Printf(GREEN_STR)
+	fmt.Printf("POST[\"\"]")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" --------> ")
+
+	fmt.Printf(PURPLE_REVERSE)
+	fmt.Printf("TAM\n")
+	fmt.Printf(STRING_RESET)
+
+	// 1.2. TeepBroker <---[{QueryRequestBin}]--- TAM
+	fmt.Printf("1.2. ")
+	fmt.Printf(GREEN_REVERSE)
+	fmt.Printf("Teep Broker")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" <-- ")
+	fmt.Printf(PURPLE_STR)
+	fmt.Printf("[{Query Request}]")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" --- ")
+
+	fmt.Printf(PURPLE_REVERSE)
+	fmt.Printf("TAM\n")
+	fmt.Printf(STRING_RESET)
+
+	// payload
+	fmt.Printf(PURPLE_STR)
+	fmt.Printf("\n[Query Request (hex)]\n")
 	printAsCbor(queryRequestBin)
-	fmt.Printf("\x1b[0m")
+	fmt.Printf(STRING_RESET)
+
+	reader := bufio.NewReader(os.Stdin)
+	reader.ReadString('\n')
+
 	// ----------------------------------------------------------------------
 	// 2. request "VerifierNonce" to the Veirifier
 	//
@@ -52,10 +103,42 @@ func main() {
 		verifierUrl = os.Args[2]
 	}
 	verifierNonceBin := teep.GetVerifierNonce(verifierUrl)
-	fmt.Printf("\x1b[32m")
-	fmt.Printf("\n[verifierNonceBin]\n")
+
+	// 2.1. TeepBroker -----------[""]---------> Verifier
+	fmt.Printf(BORDER_STR)
+	fmt.Printf("2.1. ")
+	fmt.Printf(GREEN_REVERSE)
+	fmt.Printf("Teep Broker")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" ------- ")
+	fmt.Printf(GREEN_STR)
+	fmt.Printf("GET[\"\"]")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" -------> ")
+	fmt.Printf(ORANGE_REVERSE)
+	fmt.Printf("Verifier\n")
+	fmt.Printf(STRING_RESET)
+
+	fmt.Printf("2.2. ")
+	fmt.Printf(GREEN_REVERSE)
+	fmt.Printf("Teep Broker")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" <-- ")
+	fmt.Printf(ORANGE_STR)
+	fmt.Printf("[Verifier Nonce]")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" --- ")
+
+	fmt.Printf(ORANGE_REVERSE)
+	fmt.Printf("Verifier\n")
+	fmt.Printf(STRING_RESET)
+
+	// payload
+	fmt.Printf(ORANGE_STR)
+	fmt.Printf("\n[Verifier Nonce (hex)]\n")
 	printAsCbor(verifierNonceBin)
-	fmt.Printf("\x1b[0m")
+	fmt.Printf(STRING_RESET)
+	reader.ReadString('\n')
 	// ----------------------------------------------------------------------
 	// 3. create Evidence
 	//
@@ -66,17 +149,56 @@ func main() {
 	//
 	// ----------------------------------------------------------------------
 	evidenceBin, tamTokenBin := tee.CreateEvidence(queryRequestBin, verifierNonceBin)
+	// 3.1. TeepBroker --- {QueryRequestBin}, VerifierNonceBin ---> TeepAgent
+	//
+	// 3.2. TeepBroker <--------- {Evidence}, TamTokenBin --------- TeepAgent
 
-	fmt.Printf("\x1b[33m")
-	fmt.Printf("\n[evidenceBin]\n")
+	fmt.Printf(BORDER_STR)
+	fmt.Printf("3.1. ")
+	fmt.Printf(GREEN_REVERSE)
+	fmt.Printf("Teep Broker")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" ==== ")
+	fmt.Printf(PURPLE_STR)
+	fmt.Printf("{Query Request}")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(", ")
+	fmt.Printf(ORANGE_STR)
+	fmt.Printf("Verifier Nonce")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" ===> ")
+	fmt.Printf(GREEN_REVERSE)
+	fmt.Printf("Teep Agent\n")
+	fmt.Printf(STRING_RESET)
+
+	fmt.Printf("3.2. ")
+	fmt.Printf(GREEN_REVERSE)
+	fmt.Printf("Teep Broker")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" <========= ")
+	fmt.Printf(GREEN_STR)
+	fmt.Printf("{Evidence}")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(", ")
+	fmt.Printf(PURPLE_STR)
+	fmt.Printf("Tam Token")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" ======== ")
+	fmt.Printf(GREEN_REVERSE)
+	fmt.Printf("Teep Agent\n")
+	fmt.Printf(STRING_RESET)
+
+	fmt.Printf(GREEN_STR)
+	fmt.Print("\n[Evidence]\n")
 	printAsCbor(evidenceBin)
-	fmt.Printf("\x1b[0m")
-
-	fmt.Printf("\x1b[34m")
-	fmt.Print("\n[tamTokenBin]\n")
+	fmt.Printf(PURPLE_STR)
+	fmt.Print("[TAM Token]\n")
 	printAsCbor(tamTokenBin)
-	fmt.Printf("\x1b[0m")
+	fmt.Printf(STRING_RESET)
 
+	reader.ReadString('\n')
+
+	// ----------------------------------------------------------------------
 	// 4. request Attestation Result to the Verifier
 	//
 	// 4.1. TeepBroker ---------- {Evidence} --------> Verifier
@@ -84,12 +206,42 @@ func main() {
 	// 4.2. TeepBroker <--- {AttestationResultBin} --- Verifier
 	//
 	// ----------------------------------------------------------------------
-	attestationResultBin := teep.GetAttestationResult(verifierUrl, evidenceBin)
-	fmt.Printf("\x1b[35m")
-	fmt.Printf("\n[attestationResultBin]\n")
-	printAsCbor(attestationResultBin)
-	fmt.Printf("\x1b[0m")
 
+	// 4.1. TeepBroker ---------- {Evidence} --------> Verifier
+	fmt.Printf(BORDER_STR)
+	attestationResultBin := teep.GetAttestationResult(verifierUrl, evidenceBin)
+	fmt.Printf("4.1. ")
+	fmt.Printf(GREEN_REVERSE)
+	fmt.Printf("Teep Broker")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" ---------- ")
+	fmt.Printf(GREEN_STR)
+	fmt.Printf("{Evidence}")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" ---------> ")
+	fmt.Printf(ORANGE_REVERSE)
+	fmt.Printf("Verifier\n")
+	fmt.Printf(STRING_RESET)
+
+	// 4.2. TeepBroker <--- {AttestationResultBin} --- Verifier
+	fmt.Printf("4.2. ")
+	fmt.Printf(GREEN_REVERSE)
+	fmt.Printf("Teep Broker")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" <---- ")
+	fmt.Printf(ORANGE_STR)
+	fmt.Printf("{Attestation Result}")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" ----- ")
+	fmt.Printf(ORANGE_REVERSE)
+	fmt.Printf("Verifier\n")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(ORANGE_STR)
+	fmt.Printf("\n[Attestation Result]\n")
+	printAsCbor(attestationResultBin)
+	fmt.Printf(STRING_RESET)
+
+	reader.ReadString('\n')
 	// ----------------------------------------------------------------------
 	// 5. create QueryResponse
 	//
@@ -99,11 +251,43 @@ func main() {
 	//
 	// ----------------------------------------------------------------------
 	var queryResponseBin = tee.CreateQueryResponse(attestationResultBin, tamTokenBin)
-	fmt.Printf("\x1b[36m")
-	fmt.Print("\n[queryResponseBin]\n")
-	printAsCbor(queryResponseBin)
-	fmt.Printf("\x1b[0m")
+	fmt.Printf(BORDER_STR)
+	// 5.1. TeepBroker --- {AttestationReusltBin}, TamTokenBin ---> TeepAgent
+	fmt.Printf("5.1. ")
+	fmt.Printf(GREEN_REVERSE)
+	fmt.Printf("Teep Broker")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" ==== ")
+	fmt.Printf(ORANGE_STR)
+	fmt.Printf("{Attestation Reuslt}")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(", ")
+	fmt.Printf(PURPLE_STR)
+	fmt.Print("[TAM Token]")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" ===> ")
+	fmt.Printf(GREEN_REVERSE)
+	fmt.Printf("Teep Agent\n")
+	fmt.Printf(STRING_RESET)
+	// 5.2. TeepBroker <------------- {QueryResponse} ------------- TeepAgent
+	fmt.Printf("5.2. ")
+	fmt.Printf(GREEN_REVERSE)
+	fmt.Printf("Teep Broker")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" <============ ")
+	fmt.Printf(GREEN_STR)
+	fmt.Printf("{Query Response}")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" ============ ")
+	fmt.Printf(GREEN_REVERSE)
+	fmt.Printf("Teep Agent\n")
+	fmt.Printf(STRING_RESET)
 
+	fmt.Printf(GREEN_STR)
+	fmt.Printf("\n[Query Response]\n")
+	printAsCbor(queryResponseBin)
+	reader.ReadString('\n')
+	fmt.Printf(STRING_RESET)
 	// ----------------------------------------------------------------------
 	// 6. send QueryResponse (inc. AR and token) to the TAM
 	//
@@ -112,15 +296,44 @@ func main() {
 	// 6.2. TeepBroker <------- [{Update}]---------- TAM
 	// ----------------------------------------------------------------------
 	updateBin := teep.SendQueryResponse(tamUrl, queryResponseBin)
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(BORDER_STR)
+	fmt.Printf(STRING_RESET)
+	// 6.1. TeepBroker --- [{QueryResponseBin}] ---> TAM
+	fmt.Printf("6.1. ")
+	fmt.Printf(GREEN_REVERSE)
+	fmt.Printf("Teep Broker")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" --- ")
+	fmt.Printf(GREEN_STR)
+	fmt.Printf("[{Query Response}]")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" ---> ")
+	fmt.Printf(PURPLE_REVERSE)
+	fmt.Printf("TAM\n")
+	fmt.Printf(STRING_RESET)
+	// 6.2. TeepBroker <------- [{Update}]---------- TAM
+	fmt.Printf("6.2. ")
+	fmt.Printf(GREEN_REVERSE)
+	fmt.Printf("Teep Broker")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" <------- ")
+	fmt.Printf(PURPLE_STR)
+	fmt.Printf("[{Update}]")
+	fmt.Printf(STRING_RESET)
+	fmt.Printf(" ------- ")
+	fmt.Printf(PURPLE_REVERSE)
+	fmt.Printf("TAM\n")
+	fmt.Printf(STRING_RESET)
 
 	// ----------------------------------------------------------------------
 	// 7. receive Update form the TAM
 	// ----------------------------------------------------------------------
-	fmt.Printf("\x1b[37m")
-	fmt.Print("\n[updateBin]\n")
+	fmt.Printf(PURPLE_STR)
+	fmt.Print("\n[Update]\n")
 	printAsCbor(updateBin)
-	fmt.Printf("\x1b[0m")
-
+	reader.ReadString('\n')
+	fmt.Printf(STRING_RESET)
 	// ----------------------------------------------------------------------
 	// 8. send Success to the TAM
 	// ----------------------------------------------------------------------

@@ -58,21 +58,45 @@ static void build_query_response(UsefulBufC in_tam_token,
     query_response.contains |= TEEP_MESSAGE_CONTAINS_TOKEN;
 
     //     / selected-cipher-suite / 5 : [ [ 18, -7 ] ] / only use ES256 /,
-    query_response.selected_cipher_suite = supported_cipher_suites[0];
-    query_response.contains |= TEEP_MESSAGE_CONTAINS_SELECTED_CIPHER_SUITE;
+    query_response.selected_teep_cipher_suite = supported_cipher_suites[0];
+    query_response.contains |= TEEP_MESSAGE_CONTAINS_SELECTED_TEEP_CIPHER_SUITE;
 
     //     / selected-version / 6 : 0,
     query_response.selected_version = TEEP_PROTOCOL_VERSION;
-    query_response.contains |= TEEP_MESSAGE_CONTAINS_VERSION;
+    query_response.contains |= TEEP_MESSAGE_CONTAINS_VERSIONS;
 
     //     / attestation-payload / 7 : h'' / empty only for example purpose /,
     query_response.attestation_payload.ptr = in_attestation_payload.ptr;
     query_response.attestation_payload.len = in_attestation_payload.len;
     query_response.contains |= TEEP_MESSAGE_CONTAINS_ATTESTATION_PAYLOAD;
+
+    uint8_t manifest[] = {
+        0x81, 0x48, 0x74,0x63, 0x32, 0x2E, 0x73, 0x75, 0x69,0x74
+    };
+
+    // "suit-enclave-hello.suit"
+    UsefulBufC requesting_manifest = (UsefulBufC) {
+        .ptr = manifest,
+        .len = sizeof(manifest)
+    };
+    query_response.contains |= TEEP_MESSAGE_CONTAINS_REQUESTED_TC_LIST;
+    query_response.requested_tc_list.len = 1;
+    query_response.requested_tc_list.items[0] = (teep_requested_tc_info_t) {
+        .contains = TEEP_MESSAGE_CONTAINS_TC_MANIFEST_SEQUENCE_NUMBER | TEEP_MESSAGE_CONTAINS_HAVE_BINARY,
+        .component_id = (teep_buf_t){.ptr = requesting_manifest.ptr, .len = requesting_manifest.len},
+        .tc_manifest_sequence_number = 1,
+        .have_binary = false
+    };
+
     //     / tc_list
-    query_response.tc_list.len = 0;
-    query_response.contains |= TEEP_MESSAGE_CONTAINS_TC_LIST;
+    query_response.requested_tc_list.len = 1;
+    query_response.contains |= TEEP_MESSAGE_CONTAINS_REQUESTED_TC_LIST;
     //   }
+
+
+
+
+
 
     /*
       encode structure into cbor
