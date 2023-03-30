@@ -29,16 +29,16 @@
 /*
   Key Pair of TeepAgent hardcoded in the program
 */
-extern const unsigned char teep_agent_es256_private_key_R[];
-extern const unsigned char teep_agent_es256_public_key_X[];
-extern const unsigned char teep_agent_es256_public_key_Y[];
+extern const unsigned char teep_agent_es256_private_key_R[32];
+extern const unsigned char teep_agent_es256_public_key_X[32];
+extern const unsigned char teep_agent_es256_public_key_Y[32];
 
 /*
   Key Pair of TAM hardcoded in the program
 */
-extern const unsigned char tam_es256_private_key_R[];
-extern const unsigned char tam_es256_public_key_X[];
-extern const unsigned char tam_es256_public_key_Y[];
+extern const unsigned char tam_es256_private_key_R[32];
+extern const unsigned char tam_es256_public_key_X[32];
+extern const unsigned char tam_es256_public_key_Y[32];
 
 /*
   Deallocate the OPTEE key pair for t_cose from memory.

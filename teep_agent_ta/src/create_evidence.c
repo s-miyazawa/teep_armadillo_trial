@@ -5,12 +5,39 @@
  */
 #include <qcbor/UsefulBuf.h>
 #include <qcbor/qcbor_encode.h>
+#include <stdint.h>
 #include <tee_api.h>
 #include <teep/teep_message_data.h>
 
 #include "teep_agent_ta.h"
 #include "teep_agent/api.h"
 #include "teep_agent/utils.h"
+
+
+/*
+  create a hash value of the binary data concatenating ECC public key X and Y
+
+  const unsigned char * pubkey_x : ECC public key X
+  uint32_t x_len : length of ECC public key X
+  const unsigned char * pubkey_y : ECC public key Y
+  uint32_t y_len : length of ECC public key Y
+
+  UsefulBuf out_hash: a hash value of the binary data concatenating ECC public key X and Y
+*/
+static void hashOfECCpubkey(const unsigned char * pubkey_x, uint32_t x_len,
+                            const unsigned char * pubkey_y, uint32_t y_len,
+                            UsefulBuf *out_hash)
+{
+    unsigned char concated[x_len + y_len];
+    memcpy(concated, pubkey_x, x_len);
+    memcpy(concated + x_len, pubkey_y, y_len);
+
+    UsefulBuf pubkey;
+    pubkey.ptr = concated;
+    pubkey.len = x_len + y_len;
+
+    teep_agent_hash(TEE_ALG_SHA256, &pubkey, out_hash);
+}
 
 /*
   create a new raw evidence
@@ -33,12 +60,18 @@ static QCBORError build_evidence(UsefulBufC in_eat_nonce,
 
     /* /cnf/ 8: {3: h'fb30d5697e41ae46ab43357cea7aceb91132ed85c1634899d3c198d16cbce718'} */
     QCBOREncode_OpenMapInMapN(&cbor_encode, 8);
-    UsefulBufC cnf = (UsefulBufC){(uint8_t[]){0xfb, 0x30, 0xd5, 0x69, 0x7e, 0x41, 0xae, 0x46, 0xab, 0x43, 0x35,
-                                              0x7c, 0xea, 0x7a, 0xce, 0xb9, 0x11, 0x32, 0xed, 0x85, 0xc1, 0x63,
-                                              0x48, 0x99, 0xd3, 0xc1, 0x98, 0xd1, 0x6c, 0xbc, 0xe7, 0x18},
-                                  32};
-    QCBOREncode_AddBytesToMapN(&cbor_encode, 3, cnf);
+    UsefulBuf cnf;
+    cnf.len = 32; // SHA256: 256bit / 8 = 32byte
+    cnf.ptr = TEE_Malloc(cnf.len, TEE_MALLOC_FILL_ZERO);
+    hashOfECCpubkey(teep_agent_es256_public_key_X,
+                    sizeof(teep_agent_es256_public_key_X),
+                    teep_agent_es256_public_key_Y,
+                    sizeof(teep_agent_es256_public_key_Y),
+                    &cnf);
+    print_binary(cnf.ptr,cnf.len, "cnf:");
+    QCBOREncode_AddBytesToMapN(&cbor_encode, 3, UsefulBuf_Const(cnf));
     QCBOREncode_CloseMap(&cbor_encode);
+    TEE_Free(cnf.ptr);
 
     /* / eat_nonce /       10: h'948f8860d13a463e’ */
     QCBOREncode_AddBytesToMapN(&cbor_encode, 10, in_eat_nonce);

@@ -18,6 +18,41 @@
 #define STR_GREEN "\033[32m"
 #define STR_BLUE  "\033[33m"
 
+bool teep_agent_hash(uint32_t hash_algo, UsefulBuf *in_target, UsefulBuf *out_sha256)
+{
+    // uint32_t hash_algo = TEE_ALG_SHA256;
+    TEE_Result res;
+    TEE_OperationHandle op = TEE_HANDLE_NULL;
+    TEE_ObjectHandle hash_obj = TEE_HANDLE_NULL;
+
+    // Allocate memory for the SHA256 operation
+    res = TEE_AllocateOperation(&op, hash_algo, TEE_MODE_DIGEST, 0);
+    if (res != TEE_SUCCESS) {
+        TEE_FreeTransientObject(hash_obj);
+        return false;
+    }
+
+    // Initialize the operation
+    uint32_t hashlen = 32;
+    res = TEE_DigestDoFinal(op, in_target->ptr, in_target->len, out_sha256->ptr, &hashlen);
+    out_sha256->len = hashlen;
+
+    print_binary(in_target->ptr,in_target->len, "IN_TARGET:");
+    print_binary(out_sha256->ptr,out_sha256->len, "OUT_SHA256:");
+    if (res != TEE_SUCCESS) {
+        TEE_FreeOperation(op);
+        TEE_FreeTransientObject(hash_obj);
+        DMSG(STR_BOLD STR_RED "TEE_DigestDoFinal fail: " STR_RESET "0x%x", res);
+        return false;
+    }
+
+    // Free the allocated resources
+    TEE_FreeOperation(op);
+    TEE_FreeTransientObject(hash_obj);
+
+    return true;
+}
+
 bool teep_agent_sign(UsefulBuf *workbuf, UsefulBufC *sign_target,
                      UsefulBufC *signed_cose)
 {

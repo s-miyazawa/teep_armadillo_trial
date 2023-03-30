@@ -9,6 +9,8 @@
 #include <qcbor/UsefulBuf.h>
 #include <t_cose/t_cose_common.h>
 
+bool teep_agent_hash(uint32_t hash_algo, UsefulBuf* in_target, UsefulBuf* out_sha256);
+
 bool teep_agent_sign(UsefulBuf *workbuf, UsefulBufC *sign_target, UsefulBufC *signed_cose);
 
 bool teep_agent_verify(UsefulBufC *signed_cose,

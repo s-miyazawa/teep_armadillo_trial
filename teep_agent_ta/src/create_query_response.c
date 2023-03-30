@@ -93,11 +93,6 @@ static void build_query_response(UsefulBufC in_tam_token,
     query_response.contains |= TEEP_MESSAGE_CONTAINS_REQUESTED_TC_LIST;
     //   }
 
-
-
-
-
-
     /*
       encode structure into cbor
     */
