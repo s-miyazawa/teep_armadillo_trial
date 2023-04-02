@@ -10,6 +10,8 @@ export OPTEE_CLIENT_SDK=$(OPTEE_ROOT)/out-br/per-package/optee_client_ext/target
 export CGO_CFLAGS =-I$(OPTEE_CLIENT_SDK)/include -I$(shell pwd)/../teep_agent_ta/include
 export CGO_LDFLAGS =-L$(OPTEE_CLIENT_SDK)/lib -lteec
 export CGO_ENABLED=1
+export GOOS=linux
+export GOARCH=arm64
 
 .PHONY: all clean
 
