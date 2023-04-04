@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: BSD-2-Clause
 #
 export OPTEE_ROOT=$(shell pwd)/../../optee
-export CC=$(OPTEE_ROOT)/toolchains/aarch64/usr/bin/aarch64-buildroot-linux-gnu-gcc
+export CC=$(OPTEE_ROOT)/toolchains/aarch64/bin/aarch64-linux-gcc
 export OPTEE_CLIENT_SDK=$(OPTEE_ROOT)/out-br/per-package/optee_client_ext/target/usr
 export CGO_CFLAGS =-I$(OPTEE_CLIENT_SDK)/include -I$(shell pwd)/../teep_agent_ta/include
 export CGO_LDFLAGS =-L$(OPTEE_CLIENT_SDK)/lib -lteec
